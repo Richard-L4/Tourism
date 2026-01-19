@@ -1,0 +1,746 @@
+/* ===========================
+   Reset & Base Styles
+=========================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /*max-width: 100%;*/
+}
+
+html, body {
+  height: 100%;
+  font-family: "Times New Roman", Times, serif;
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 4.375rem;
+  background: url('../images/Tourism-background.webp') 
+              center center / cover no-repeat fixed;
+  image-rendering: auto;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 2rem 1rem;
+  gap: 2rem;
+}
+
+.color {
+  color: yellow;                       /* text color */
+  text-align: center;
+  margin: 0em auto;
+  padding: 0.5em 1em;                   /* subtle padding to keep size reasonable */
+  border: 2px solid yellow;           /* blue border */
+  border-radius: 8px;       
+  background: #120d71;
+}
+
+
+
+/* ===========================
+   Navbar
+=========================== */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #120d71;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.logo a {
+  color: #f8046f;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.nav-links {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: #f8046f;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links span {
+  color: #120d71;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: yellow;
+}
+
+nav a.active {
+  color: yellow;
+}
+
+.nav-links span.active {
+  color: yellow;
+}
+
+.hamburger {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #f8046f;
+  z-index: 10;
+}
+
+@media screen and (max-width: 940px) {
+  .nav-links {
+    display: none;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background-color: #003366;
+    padding: 10px 0;
+    text-align: center;
+    z-index: 5;
+  }
+  .nav-links.show {
+    display: grid;
+  }
+  .hamburger { display: block; }
+}
+
+/* ===========================
+   Auth Badge
+=========================== */
+.auth-badge {
+  display: block;
+  width: fit-content;
+  margin: 10px auto;
+  padding: 5px 12px;
+  background-color: #120d71;
+  color: #f8046f;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 20px;
+  border: 1px solid #b3e0ff;
+  text-align: center;
+}
+
+@media screen and (max-width: 400px) {
+  .auth-badge {
+    margin-top: 6rem; /* adjust this value as needed */
+  }
+}
+
+/* Updated Cards Container for all screen sizes */
+.cards-container,
+.grid-container {
+  display: flex;            /* use flex instead of grid */
+  flex-wrap: wrap;          /* allow multiple cards to wrap */
+  justify-content: center;  /* center single or partial row */
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+  margin: 0 auto;
+}
+
+/* Card sizing remains responsive */
+.card,
+.grid {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  min-height: 350px;
+  padding: 1rem;
+  gap: 1rem;
+  flex: 1 1 300px;   /* allows card to grow/shrink responsively */
+  max-width: 350px;   /* prevents card from getting too wide */
+}
+
+
+/* Large screens: 3 per row */
+@media (min-width: 992px) {
+  .cards-container,
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Medium screens: 2+1 layout */
+@media (min-width: 768px) and (max-width: 991px) {
+  .cards-container,
+  .grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .cards-container .card:nth-child(1),
+  .grid-container .grid:nth-child(1) { order: 1; }
+  .cards-container .card:nth-child(2),
+  .grid-container .grid:nth-child(2) { order: 3; } /* second card goes to bottom */
+  .cards-container .card:nth-child(3),
+  .grid-container .grid:nth-child(3) { order: 2; } /* third card goes to middle */
+}
+
+/* Small screens: 1 per row */
+@media (max-width: 767px) {
+  .cards-container,
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual card styling */
+.card,
+.grid {
+  background-color: #120d71;
+  border: 2px solid yellow;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  min-height: 350px;       /* taller cards */
+  padding: 1rem;
+  gap: 1rem;
+  width: 100%;
+  max-width: 350px;        /* prevents card from being too wide */
+  cursor: pointer;
+}
+
+/* Make grid images fill most of the card */
+.grid img {
+    width: 100%;         /* fill card width */
+    height: auto;        /* maintain aspect ratio */
+    flex-grow: 1;        /* allow image to grow in card */
+    object-fit: cover;   /* crop if necessary without stretching */
+    border-radius: 8px 8px 0 0;
+}
+
+/* Keep description below the image, small height */
+.grid p,
+.card p {
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0;   /* small spacing above text */
+    flex-shrink: 0;       /* description doesn't shrink */
+    color: yellow;
+}
+
+
+.card .read-more,
+.grid .read-more {
+  margin-top: 0.5rem;
+  text-decoration: none;
+  color: #f8046f;
+  font-weight: bold;
+}
+
+.card .read-more:hover,
+.grid .read-more:hover {
+  text-decoration: underline;
+}
+
+.card:hover,
+.grid:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+.card-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  max-width: 800px;
+}
+
+.card-detail img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 2px solid #007BFF; /* border only around image */
+  padding: 5px;
+  background-color: #fff;
+  border: 2px solid #120d71;    /* subtle border */
+}
+
+.card-content-box {
+  background-color: #ffffff; /* white box for content */
+  border: 2px solid #120d71;    /* subtle border */
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 100%;               /* fills max-width of card-detail */
+  box-sizing: border-box;
+}
+
+.card-detail a {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #120d71; /* your solid color */
+  color: #f8046f;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: transform 0.2s, background-color 0.2s;
+  border: 2px solid yellow;
+}
+
+.card-detail a:hover {
+  background-color: yellow; /* slightly darker for hover */
+  transform: translateY(-2px);
+  color: #111;
+}
+
+
+
+/* ===========================
+   Return Home
+=========================== */
+.return-home a {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+.return-home a img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.return-home a span {
+  display: inline-block;
+  margin-top: 50px;
+  padding: 10px 20px;
+  background-color: #120d71; /* your solid color */
+  color: yellow;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: transform 0.2s, background-color 0.2s;
+  border: 4px solid #f8046f;
+}
+
+.return-home a:hover span {
+  background-color: yellow; /* slightly darker for hover */
+  transform: translateY(-2px);
+  color: #111;
+}
+
+/* ===========================
+   Contact Form
+=========================== */
+.contact-form, #form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background: #120d71;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  color: #f8046f;
+}
+
+.contact-form input,
+.contact-form textarea,
+.contact-form select,
+#contact-form input,
+#contact-form textarea,
+#contact-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.contact-form button,
+#contact-form button,
+#form button,
+#lg, #clg,
+.logout-form button,
+.logout-form .cancel-link,
+.cancel-link {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-decoration: none;
+}
+
+.contact-form button { background-color: #1e90ff; color: white; }
+.contact-form button:hover { background-color: #0b70d4; }
+
+#form button, #contact-form button { background-color: yellow; color: black; }
+#form button:hover, #contact-form button:hover { background-color: #a0abb7; color: #111; }
+
+#lg, #clg { background-color: rgb(203 46 211); color: #fff; }
+#lg:hover, #clg:hover { background-color: #a0abb7; color: #111; }
+
+.cancel-link, .logout-form .cancel-link { background-color: #ccc; color: #111; }
+.cancel-link:hover, .logout-form .cancel-link:hover { background-color: #999; color: #fff; }
+
+/* ===========================
+   Form & Map Layout
+=========================== */
+.form-map-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  flex-wrap: wrap;
+}
+
+#form, .map { flex: 1 1 300px; }
+
+#map {
+  width: 100%;
+  height: 400px;
+  border: 14px solid #120d71;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.map iframe {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  border: 0.5rem solid rgb(203 46 211);
+  border-radius: 8px;
+}
+
+@media screen and (min-width: 768px) {
+  .form-map-container { flex-direction: row; justify-content: center; align-items: center; }
+  #contact-form, .map { margin: 0 1rem; }
+}
+
+@media screen and (min-width: 1500px) {
+  .form-map-container { gap: 22rem; }
+}
+
+@media screen and (max-width: 414px) {
+  .form-map-container { flex-direction: column; gap: 1rem; margin-top: 8rem; }
+  #contact-form { width: 100%; max-width: 400px; margin: 0; }
+}
+
+hr {
+  all: unset;
+  display: block;
+  height: 4px;
+  background-color: #120d71;
+  margin: 1.5em 0;
+}
+
+.no-comments {
+  color: #120d71;                  /* text in deep blue */
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 1em auto;
+  padding: 0.75em 1em;             /* some inner space */
+  border: 2px solid #120d71;       /* blue border */
+  background-color: rgba(18, 13, 113, 0.1); /* very light blue background */
+  border-radius: 8px;              /* rounded corners */
+  max-width: 300px;                /* optional, keeps it centered nicely */
+}
+
+
+
+/* ===========================
+   9. Comments / Buttons (Theme Colors)
+=========================== */
+.container {
+  max-width: 600px;
+  margin: 2em auto;
+  background: #fff;
+  padding: 1em;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 2px solid #120d71;
+}
+
+.comment {
+  margin-bottom: 1em;
+  padding: 0.75em 1em;
+  background: #f9f9f9; /* subtle background for readability */
+  border-radius: 8px;
+}
+
+.comments-section h2 {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #120d71; /* your solid color */
+  color: #f8046f;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: transform 0.2s, background-color 0.2s;
+  border: 2px solid yellow;
+}
+
+.comment {
+    margin-bottom: 1.5em;
+    margin-top: 3rem;
+    padding: 1em;
+    background: #f9f9f9;           /* light neutral background for readability */
+    border: 2px solid #120d71;     /* deep blue border from your theme */
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+
+.comment p {
+  margin: 0.25em 0;
+  color: #120d71; /* deep blue for main text */
+  line-height: 1.4;
+}
+
+.comment p strong {
+  color: #f8046f; /* pink username */
+  font-weight: bold;
+}
+
+.comment small {
+  color: #555; /* dark gray for date/time, readable */
+  font-style: italic;
+  display: block;
+  margin-top: 0.3em;
+}
+
+button {
+  background: #120d71; 
+  color: #f8046f;
+  border: none;
+  padding: 0.4em 1em;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 2px solid yellow;
+}
+
+button:hover {
+ background: yellow; 
+ color: #111;
+}
+
+.form-control {
+    border: 2px solid #120d71; /* deep blue border matching your theme */
+    border-radius: 6px;         /* rounded corners */
+    padding: 0.5em;             /* some inner space */
+    outline: none;              /* remove default focus outline */
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-color: #f8046f;      /* pink border on focus */
+    box-shadow: 0 0 5px rgba(248, 4, 111, 0.5); /* subtle glow */
+}
+
+
+.actions a {
+  background: #120d71; 
+  color: #f8046f;
+  padding: 0.3em 0.8em;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-right: 0.5em;
+  font-size: 0.9em;
+  transition: background 0.2s;
+  border: 2px solid yellow;
+}
+
+.actions a:hover {
+  background: yellow; 
+  color: #111; 
+}
+
+.container a {
+  background: #120d71; 
+  color: #f8046f;
+  padding: 0.3em 0.8em;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-right: 0.5em;
+  font-size: 0.9em;
+  transition: background 0.2s;
+  border: 2px solid yellow;
+}
+
+.container a:hover {
+  background: yellow; 
+  color: #111; 
+}
+
+.comment .actions a {
+  margin: 0 0.3rem;
+  text-decoration: none;
+}
+
+.comment hr {
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+}
+
+
+/* ===========================
+   Footer
+=========================== */
+footer {
+  background-color: #120d71;
+  color: rgb(121, 7, 127);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.footer-text {
+  color: #f8046f;
+  transition: color 0.3s;
+}
+
+.footer-text:hover { color: yellow; cursor: pointer; }
+
+.social-links {
+  display: flex;
+  justify-content: space-around; /* evenly spread */
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.social-links a {
+  color: #f8046f;
+  text-decoration: none;
+  transition: color 0.3s;
+  flex-shrink: 1;  /* allows icons to shrink */
+  text-align: center;
+  white-space: nowrap; /* prevents wrapping of icon text if any */
+}
+
+.social-links a:hover { color: yellow; }
+
+@media screen and (max-width: 460px) {
+  footer { padding: 1rem 0.5rem; }
+}
+
+@media screen and (max-width: 317px) {
+  footer {
+    width: 100%;        /* span full container */
+    max-width: 100vw;   /* prevent overflow beyond viewport */
+    padding: 0.5rem 0;  /* minimal padding to avoid horizontal scroll */
+    margin: 0;          /* remove any default margin */
+    box-sizing: border-box;
+  }
+
+  .social-links {
+    flex-direction: column;  /* stack links vertically */
+    align-items: center;     /* center them horizontally */
+    gap: 0.25rem;            /* reduce gap for tiny screens */
+    width: 100%;             /* take full footer width */
+  }
+
+  .social-links a {
+    flex-shrink: 1;           /* allow shrinking */
+    white-space: normal;      /* allow wrapping if needed */
+    text-align: center;       /* center text/icons */
+  }
+}
+
+/* Pagination styles */
+
+.pagination {
+    width: fit-content;
+    margin: 2rem auto;      /* centers the whole block */
+    padding: 1rem 1.5rem;   /* adds nice spacing */
+    background: #120d71;    /* your theme color */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: #f8046f;
+}
+
+
+/* Pagination button wrappers */
+.pagination .prev-wrapper,
+.pagination .next-wrapper {
+    display: flex;
+    justify-content: center;     /* center <a> inside wrapper */
+}
+
+/* Pagination buttons */
+.pagination a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 2px solid yellow;
+    border-radius: 6px;
+    background: #0077b6;         /* blue button */
+    color: #f8046f;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+/* Hover effect */
+.pagination a:hover {
+    background: #120d71;        /* dark background on hover */
+    color: yellow;              /* text color changes */
+}
+
+
+/* ===========================
+   Misc Responsive
+=========================== */
+@media screen and (max-width: 740px) { h1.color { margin-top: 4rem; } }
+@media screen and (max-width: 375px) { h1.color { margin-top: 8rem; } }
+@media screen and (max-width: 320px) { body { padding-top: 3.5rem; } }
+@media screen and (max-height: 500px) { body { min-height: 100vh; } }
