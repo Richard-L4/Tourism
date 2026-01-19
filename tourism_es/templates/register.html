@@ -4,7 +4,8 @@
 {% block title %}Tourism | Register{% endblock %}
 
 {% block content %}
-<h1 class="color">Welcome to The Tourism Project</h1p>
+<h1 class="color">Welcome to The Tourism Project</h1>
+
 <p class="color">The register page.
     <a href="{% url 'index'%}">
         <span>Return Home</span>
@@ -12,7 +13,7 @@
 </p>
 
 <div class="form-map-container">
-    <section id="contact">
+    <section id="form">
         <form id="contact-form" method="post" action="{% url 'register' %}">
             {% csrf_token %}
             {{ form.as_p }}
