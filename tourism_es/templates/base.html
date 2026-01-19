@@ -23,13 +23,16 @@
             <a href="{% url 'index' %}">Tourism</a>
         </div>
 
-        {% comment %}
         <a href="{% url 'about' %}">About</a>
-        <a href="{% url 'tournament' %}">Tournament</a>
+        <a href="{% url 'events' %}">Events</a>
+        <a href="{% url 'event-details' %}">Event Details</a>
         <a href="{% url 'login' %}">Login</a>
         <a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'confirm-logout' %}"></a>
+        <a href="{% url 'edit-comment' %}"></a>
+        <a href="{% url 'delete-comments' %}"></a>
         <a href="{% url 'register' %}">Register</a>
-        {% endcomment %}
+        <a href="{% url 'admin:index' %}">Admin</a>
 
         <div class="hamburger" id="hamburger">&#9776;</div>
     </nav>

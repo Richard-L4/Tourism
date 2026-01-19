@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tourism | Register{% endblock %}
+
+{% block content %}
+<h1 class="color">Welcome to The Tourism Project</h1p>
+<p class="color">The register page.
+    <a href="{% url 'index'%}">
+        <span>Return Home</span>
+    </a>
+</p>
+
+<div class="form-map-container">
+    <section id="contact">
+        <form id="contact-form" method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <a>Please enter password</a>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+</div>
+
+{% endblock %}
