@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Tourism{% endblock %}</title>
-    <script defer src="{% static 'JS/england-rugby.js' %}"></script>
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon.png' %}">
@@ -23,19 +22,44 @@
             <a href="{% url 'index' %}">Tourism</a>
         </div>
         <div class="nav-links" id="nav-links">
-        <a href="{% url 'about' %}">About</a>
-        <a href="{% url 'events' %}">Events</a>
-        <a href="{% url 'event-details' %}">Event Details</a>
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'logout' %}">Logout</a>
-        <a href="{% url 'register' %}">Register</a>
-        <a href="{% url 'admin:index' %}">Admin</a>
+            <a href="{% url 'index' %}" class="{% if active_tab == 'index' %}active{% endif %}">Home</a>
+            <a href="{% url 'about' %}" class="{% if active_tab == 'about' %}active{% endif %}">About</a>
+            <a href="{% url 'events' %}" class="{% if active_tab == 'events' %}active{% endif %}">Events</a>
+            <a href="{% url 'event-details' %}" class="{% if active_tab == 'event-details' %}active{% endif %}">Event Details</a>
+            {% if not user.is_authenticated %}
+                {% if active_tab == 'login' %}
+                    <span class="active">Login</span>
+                {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+            {% endif %}
+            <a href="{% url 'logout' %}" class="{% if active_tab == 'logout' %}active{% endif %}">Logout</a>
+            {% if active_tab == 'confirm-logout' %}
+            <span class="{% if active_tab == 'confirm-logout' %}active{% endif %}">Confirm Logout</span>
+            {% endif %}
+            <a href="{% url 'register' %}" class="{% if active_tab == 'register' %}active{% endif %}">Register</a>
+            {% if user.is_staff %}
+            <a href="{% url 'admin:index' %}">Admin</a>
+            {% endif %}
         </div>
         <div class="hamburger" id="hamburger">&#9776;</div>
     </nav>
+ <!-- message block-->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show position-fixed top-50 start-50 translate-middle-x mt-3"
+        role="alert" style="z-index: 1055;">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
 
-   
-
+    {% if request.user.is_authenticated %}
+    <div class="auth-badge">
+        You are logged in as {{ request.user.username }}
+    </div>
+    {% endif %}
 
 
     <main>

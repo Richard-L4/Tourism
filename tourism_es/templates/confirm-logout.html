@@ -5,6 +5,16 @@
 
 {% block content %}
 <h1 class="color">Welcome to The Tourism Project</h1>
+<p class="color">The Confirm Logout page.</p>
+<p>
+    <a class="color" href="{% url 'index' %}">Return to Home</a>
+</p>
+
+<form method="post" action="{% url 'confirm-logout' %}" class="confirm-logout-form">
+    {% csrf_token %}
+    <button id="clg" type="submit">Confirm Logout</button>
+    <a class="color" href="{% url 'index' %}">Cancel</a>
+</form>
 
 
 {% endblock %}

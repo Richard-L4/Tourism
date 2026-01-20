@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, ContactForm
 from django.contrib import messages
+from django.contrib.auth import login, authenticate
+from django.contrib.auth import logout
+from django.contrib.auth.forms import AuthenticationForm
 
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'index.html', {'active_tab': 'index'})
 
 
 def about(request):
@@ -16,35 +19,61 @@ def about(request):
             return redirect('about')
     else:
         form = ContactForm()
-    return render(request, 'about.html', {'form': form})
+    return render(request, 'about.html', {'active_tab': 'about', 'form': form})
 
 
 def events(request):
-    return render(request, 'events.html')
+    return render(request, 'events.html', {'active_tab': 'events'})
 
 
 def event_details(request):
-    return render(request, 'event-details.html')
+    return render(request, 'event-details.html',
+                  {'active_tab': 'event-details'})
 
 
 def edit_comment(request):
-    return render(request, 'edit-comment.html')
+    return render(request, 'edit-comment.html', {'active_tab': 'edit-comment'})
 
 
 def delete_comments(request):
-    return render(request, 'delete-comments.html')
+    return render(request, 'delete-comments.html',
+                  {'active_tab': 'delete-comments'})
 
 
-def login(request):
-    return render(request, 'login.html')
+def user_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"You are logged in as {username}")
+                return redirect('index')
+            else:
+                messages.error(request, "Invalid username or password")
+        else:
+            messages.error(request, "Invalid username or password")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html',
+                  {'active_tab': 'login', 'form': form})
 
 
-def logout(request):
-    return render(request, 'logout.html')
+def user_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('index')
+    return render(request, 'logout.html', {'active_tab': 'logout'})
 
 
 def confirm_logout(request):
-    return render(request, 'confirm-logout.html')
+    if request.method == 'POST':
+        logout(request)
+        return redirect('index')
+    return render(request, 'confirm-logout.html',
+                  {'active_tab': 'confirm-logout'})
 
 
 def register(request):
@@ -59,4 +88,5 @@ def register(request):
             return redirect('login')
     else:
         form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'register.html',
+                  {'active_tab': 'register', 'form': form})

@@ -55,3 +55,12 @@ class ContactForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['phone'].required = False
+
+
+class LoginForm(forms.Form):
+    name = forms.CharField(max_length=20, label="Username")
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Enter your name'
+        }), label="Password"
+    )

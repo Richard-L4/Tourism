@@ -130,8 +130,9 @@ nav a.active {
 }
 
 /* ===========================
-   Auth Badge
+   Auth Badge for logged in message
 =========================== */
+
 .auth-badge {
   display: block;
   width: fit-content;
