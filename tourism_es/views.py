@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import RegisterForm
+from .forms import RegisterForm, ContactForm
 from django.contrib import messages
 
 
@@ -8,7 +8,15 @@ def index(request):
 
 
 def about(request):
-    return render(request, 'about.html')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your message has been submitted")
+            return redirect('about')
+    else:
+        form = ContactForm()
+    return render(request, 'about.html', {'form': form})
 
 
 def events(request):

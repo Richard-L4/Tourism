@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Contact
 
 
 class RegisterForm(UserCreationForm):
@@ -27,3 +28,30 @@ class RegisterForm(UserCreationForm):
             'username': forms.TextInput(
                 attrs={'placeholder': 'Enter your username'}),
         }
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['name', 'email', 'phone', 'message']
+        labels = {
+            'name': 'Full Name',
+            'email': 'Email',
+            'phone': 'Phone',
+            'message': 'Message',
+        }
+
+        widgets = {
+            'name': forms.TextInput(
+                attrs={'placeholder': 'Enter your full name'}),
+            'email': forms.EmailInput(
+                attrs={'placeholder': 'Enter your email address'}),
+            'phone': forms.TextInput(
+                attrs={'placeholder': 'Enter your phone number'}),
+            'message': forms.Textarea(
+                attrs={'placeholder': 'Enter your message'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['phone'].required = False

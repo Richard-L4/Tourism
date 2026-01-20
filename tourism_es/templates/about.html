@@ -5,6 +5,38 @@
 
 {% block content %}
 <h1 class="color">Welcome to The Tourism Project</h1>
+<p>
+    <a class="color" href="{% url 'index' %}">The about page</a>
+</p>
+
+<div class="form-map-container">
+    <!-- message block-->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show position-fixed top-50 start-50 translate-middle-x mt-3"
+        role="alert" style="z-index: 1055;">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
 
 
+<section id="form">
+    <form id="contact-form" method="post" action="{% url 'about' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </form>
+</section>
+
+<div class="map">
+    <iframe id="map" width="600" height="450"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=-0.4622%2C39.4136%2C-0.2906%2C39.5256&amp;layer=mapnik&amp;marker=39.4696%2C-0.3764"
+        allowfullscreen loading="lazy">
+    </iframe>
+
+</div>
+</div>
 {% endblock %}
