@@ -46,7 +46,20 @@ main {
 }
 
 
+a.color-return {                     
+  text-align: center;
+  margin: 0em auto;
+  padding: 0.5em 1em;                   /* subtle padding to keep size reasonable */
+  border: 2px solid yellow;           /* blue border */
+  border-radius: 8px;       
+  background: #120d71;
+  color: #f8046f;
+  text-decoration: none;
+}
 
+a.color-return:hover {
+  color: yellow
+}
 /* ===========================
    Navbar
 =========================== */
