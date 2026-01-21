@@ -5,6 +5,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
 from .models import CardText
+from django.core.paginator import Paginator
 
 
 def index(request):
@@ -24,9 +25,13 @@ def about(request):
 
 
 def events(request):
-    cards = CardText.objects.all().order_by('id')
+    # cards for card: cards in return render and for paginator later
+    card_texts = CardText.objects.all().order_by('id')
+    paginator = Paginator(card_texts, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, 'events.html', {
-        'active_tab': 'events', 'cards': cards})
+        'active_tab': 'events', 'page_obj': page_obj})
 
 
 def event_details(request, pk):

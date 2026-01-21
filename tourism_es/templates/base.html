@@ -25,6 +25,9 @@
             <a href="{% url 'index' %}" class="{% if active_tab == 'index' %}active{% endif %}">Home</a>
             <a href="{% url 'about' %}" class="{% if active_tab == 'about' %}active{% endif %}">About</a>
             <a href="{% url 'events' %}" class="{% if active_tab == 'events' %}active{% endif %}">Events</a>
+            {% if active_tab == 'event-details' %}
+            <span class="active">Event Details</span>
+            {% endif %}
             {% if not user.is_authenticated %}
                 {% if active_tab == 'login' %}
                     <span class="active">Login</span>

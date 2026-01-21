@@ -736,9 +736,11 @@ footer {
 
 /* Hover effect */
 .pagination a:hover {
-    background: #120d71;        /* dark background on hover */
-    color: yellow;              /* text color changes */
+    background: #120d71;
+    color: yellow;
 }
+
+
 
 
 /* ===========================
