@@ -12,5 +12,21 @@
     <a class="color" href="{% url 'index' %}">Return Home</a>
 </p>
 
+<!--Container for cards to lead to more details page-->
+<div class="cards-container">
+    {% for card in cards %}
+    <div class="card" data-url="{% url 'event-details' pk=card.id %}"
+     onclick="window.location=this.dataset.url">
+     <img src="{% static 'images/' %}{{ card.image_name }}" alt="{{ card.title }}">
+     <p>{{ card.content|truncatechars:100}}</p>
+     <a href="{% url 'event-details' pk=card.id %}" class="read-more">
+        Read more
+     </a>
+    </div>
+    {% empty %}
+    <p>No cards yet</p>
+    {% endfor %}
+</div>
+
 
 {% endblock %}

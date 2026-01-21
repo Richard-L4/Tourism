@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm, ContactForm
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
+from .models import CardText
 
 
 def index(request):
@@ -23,12 +24,19 @@ def about(request):
 
 
 def events(request):
-    return render(request, 'events.html', {'active_tab': 'events'})
+    cards = CardText.objects.all().order_by('id')
+    return render(request, 'events.html', {
+        'active_tab': 'events', 'cards': cards})
 
 
-def event_details(request):
-    return render(request, 'event-details.html',
-                  {'active_tab': 'event-details'})
+def event_details(request, pk):
+    # safer way to get the event; avoids crashing if ID doesn't exist
+    event = get_object_or_404(CardText, id=pk)
+
+    return render(request, 'event-details.html', {
+        'active_tab': 'event-details',
+        'event': event,  # pass the event to the template
+    })
 
 
 def edit_comment(request):

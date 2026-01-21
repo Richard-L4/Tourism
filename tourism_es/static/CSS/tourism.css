@@ -19,7 +19,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   padding-top: 4.375rem;
-  background: url('../images/City\ of\ Arts\ and\ Sci.png') 
+  background: url('../images/City-of-Arts-and-Sci.png') 
               center center / cover no-repeat fixed;
   image-rendering: auto;
 }
@@ -153,12 +153,11 @@ nav a.active {
   }
 }
 
-/* Updated Cards Container for all screen sizes */
 .cards-container,
 .grid-container {
-  display: flex;            /* use flex instead of grid */
-  flex-wrap: wrap;          /* allow multiple cards to wrap */
-  justify-content: center;  /* center single or partial row */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;  /* center partial rows */
   gap: 1.5rem;
   width: 100%;
   max-width: 1200px;
@@ -166,10 +165,11 @@ nav a.active {
   margin: 0 auto;
 }
 
-/* Card sizing remains responsive */
+/* Cards themselves */
 .card,
 .grid {
-  background-color: white;
+  background-color: #120d71;
+  border: 2px solid yellow;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   overflow: hidden;
@@ -182,28 +182,29 @@ nav a.active {
   min-height: 350px;
   padding: 1rem;
   gap: 1rem;
-  flex: 1 1 300px;   /* allows card to grow/shrink responsively */
-  max-width: 350px;   /* prevents card from getting too wide */
+  cursor: pointer;
+
+  flex: 0 1 calc(25% - 1.5rem); /* 4 per row on large screens */
+  max-width: calc(25% - 1.5rem);
 }
 
-
-/* Large screens: 3 per row */
-@media (min-width: 992px) {
-  .cards-container,
-  .grid-container {
-    grid-template-columns: repeat(3, 1fr);
+/* Medium screens: 2 per row (2×2) */
+@media (max-width: 991px) and (min-width: 768px) {
+  .card,
+  .grid {
+    flex: 0 1 calc(50% - 1.5rem);
+    max-width: calc(50% - 1.5rem);
   }
 }
 
-/* Medium screens: 2+1 layout */
-@media (min-width: 768px) and (max-width: 991px) {
-  .cards-container,
-  .grid-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
+/* Small screens: 1 per row */
+@media (max-width: 767px) {
+  .card,
+  .grid {
+    flex: 0 1 100%;
+    max-width: 100%;
   }
+}
 
   .cards-container .card:nth-child(1),
   .grid-container .grid:nth-child(1) { order: 1; }
@@ -211,7 +212,7 @@ nav a.active {
   .grid-container .grid:nth-child(2) { order: 3; } /* second card goes to bottom */
   .cards-container .card:nth-child(3),
   .grid-container .grid:nth-child(3) { order: 2; } /* third card goes to middle */
-}
+
 
 /* Small screens: 1 per row */
 @media (max-width: 767px) {
