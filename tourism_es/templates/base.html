@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Tourism{% endblock %}</title>
+    <title>{% block title %}Valencia{% endblock %}</title>
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon.png' %}">
@@ -19,7 +19,7 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <a href="{% url 'index' %}">Tourism</a>
+            <a href="{% url 'index' %}">Valencia</a>
         </div>
         <div class="nav-links" id="nav-links">
             <a href="{% url 'index' %}" class="{% if active_tab == 'index' %}active{% endif %}">Home</a>

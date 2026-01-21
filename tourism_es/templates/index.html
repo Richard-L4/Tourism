@@ -1,10 +1,38 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Tourism | Home{% endblock %}
+{% block title %}Valencia | Home{% endblock %}
 
 {% block content %}
-<h1 class="color">Welcome to The Tourism Project</h1>
+<h1 class="color">Welcome to The Valencia Project</h1>
 
+<div class="image-morph">
+    <img src="{% static 'images/Albufera.jpg' %}" alt="">
+    <img src="{% static 'images/Science-Park.jpg' %}" alt="">
+    <img src="{% static 'images/El-Carmen.jpg' %}" alt="">
+    <img src="{% static 'images/fallas.jpg' %}" alt="">
+    <img src="{% static 'images/Gran-Via.jpg' %}" alt="">
+    <img src="{% static 'images/Plaza-Ayuntamiento.jpg' %}" alt="">
+    <img src="{% static 'images/Plaza-de-la-Reina.jpg' %}" alt="">
+    <img src="{% static 'images/rusafa.jpg' %}" alt="">
+</div>
+
+
+<div class="valencia-intro">
+       <div class="valencia-text">
+    <p>
+        Valencia, on Spain’s east coast along the Mediterranean, blends rich history, stunning architecture, and a lively cultural scene.
+    </p>
+    <p>
+        Its historic center features narrow streets, beautiful plazas, Valencia Cathedral, and the Silk Exchange. Visitors enjoy ancient markets, local cuisine, and scenic strolls.
+    </p>
+    <p>
+        The futuristic City of Arts and Sciences captivates all ages with an opera house, science museum, and aquarium. Gardens, beaches, and parks offer relaxation, while festivals like Las Fallas showcase art, music, and fire.
+    </p>
+    <p>
+        With tradition, modernity, and welcoming streets, Valencia provides a vibrant Mediterranean experience that delights the senses and leaves a lasting impression.
+    </p>
+    </div>
+</div>
 
 {% endblock %}

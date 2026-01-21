@@ -153,6 +153,99 @@ nav a.active {
   }
 }
 
+/* for photo display in index */
+
+
+
+.image-morph {
+    position: relative;
+    width: 70%;
+    max-width: 1200px;
+    height: 400px;
+    margin: 20px auto;
+    overflow: hidden;
+    border: 8px solid #120d71;
+    border-radius: 8px;
+    box-shadow: 0 0 0 4px yellow; 
+}
+
+.image-morph img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: morph 25.6s linear infinite;
+}
+
+.image-morph img:nth-child(1) { animation-delay: 0s; }
+.image-morph img:nth-child(2) { animation-delay: 3.2s; }
+.image-morph img:nth-child(3) { animation-delay: 6.4s; }
+.image-morph img:nth-child(4) { animation-delay: 9.6s; }
+.image-morph img:nth-child(5) { animation-delay: 12.8s; }
+.image-morph img:nth-child(6) { animation-delay: 16s; }
+.image-morph img:nth-child(7) { animation-delay: 19.2s; }
+.image-morph img:nth-child(8) { animation-delay: 22.4s; }
+
+@keyframes morph {
+    0% { opacity: 0; }
+    3.125% { opacity: 1; }       /* fade in over 0.2s (3.2% of 25.6s) */
+    15.625% { opacity: 1; }      /* stay visible for ~3s */
+    18.75% { opacity: 0; }       /* fade out over 0.2s */
+    100% { opacity: 0; }         /* remain hidden for the rest of cycle */
+}
+
+/* intro text */
+.valencia-intro {
+    width: 85%;
+    background-color: #120d71;
+    padding: 5%;                    /* some vertical padding only */
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 0 auto;
+    border-radius: 2%;
+    border: 8px solid yellow;       /* outer border */
+}
+
+.valencia-text {
+    width: 80%;
+    padding: 50px;
+    background-color: whitesmoke;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0;                      /* remove auto margin inside flex container */
+}
+
+
+
+
+
+/* Large screens between 1080px and 1500px */
+@media (min-width: 1080px) and (max-width: 1500px) {
+    .valencia-intro {
+        width: 85%;                 /* slightly wider blue container */
+    }
+    .valencia-text {
+        width: 80%;                 /* inner box keeps same proportion */
+    }
+}
+
+/* Large screens between 1080px and 1500px */
+@media (max-width: 1080px)  {
+    .valencia-intro {
+        width: 70%;                 /* slightly wider blue container */
+    }
+    .valencia-text {
+        width: 80%;                 /* inner box keeps same proportion */
+    }
+}
+
 .cards-container,
 .grid-container {
   display: flex;
