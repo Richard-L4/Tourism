@@ -60,6 +60,20 @@ a.color-return {
 a.color-return:hover {
   color: yellow
 }
+
+.logo a {
+    display: flex;           /* make text + image inline and aligned */
+    align-items: center;     /* vertically center image with text */
+    gap: 0.7rem;             /* small space between text and image */
+    text-decoration: none;   /* optional */
+    color: inherit;          /* optional */
+}
+
+.logo-img {
+    width: 16px;             /* match favicon size */
+    height: 16px;
+}
+
 /* ===========================
    Navbar
 =========================== */
@@ -214,7 +228,7 @@ nav a.active {
 .valencia-intro {
     width: 85%;
     background-color: #120d71;
-    padding: 5%;                    /* some vertical padding only */
+    padding: 5rem 5%;                    /* some vertical padding only */
     display: flex;
     justify-content: center;
     box-sizing: border-box;
@@ -224,8 +238,8 @@ nav a.active {
 }
 
 .valencia-text {
-    width: 80%;
-    padding: 50px;
+    width: 95%;
+    padding: 10px;
     background-color: whitesmoke;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);

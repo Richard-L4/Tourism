@@ -10,5 +10,17 @@
     <a class="color-return" href="{% url 'index' %}">Return Home</a>
 </p>
 
+<main class="card-detail-wrapper">
+    <div class="container">
+        <h1>Edit Comment</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Changes</button>
+            <a href="{% url 'event-details' comment.card.pk %}">Cancel</a>
+        </form>
+    </div>
+</main>
+
 
 {% endblock %}

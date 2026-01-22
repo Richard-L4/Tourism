@@ -19,7 +19,10 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <a href="{% url 'index' %}">Valencia</a>
+            <a href="{% url 'index' %}">
+                Valencia
+                <img src="{% static 'favicon/favicon-32x32.png' %}" alt="Logo" class="logo-img">
+            </a>
         </div>
         <div class="nav-links" id="nav-links">
             <a href="{% url 'index' %}" class="{% if active_tab == 'index' %}active{% endif %}">Home</a>

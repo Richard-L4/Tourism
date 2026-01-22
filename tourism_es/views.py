@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegisterForm, ContactForm
+from .forms import RegisterForm, ContactForm, CommentForm
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
-from .models import CardText
+from .models import CardText, Comment
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -36,21 +37,65 @@ def events(request):
 
 def event_details(request, pk):
     # safer way to get the event; avoids crashing if ID doesn't exist
-    event = get_object_or_404(CardText, id=pk)
+    card = get_object_or_404(CardText, id=pk)
+    is_saved = False
+    if request.user.is_authenticated:
+        is_saved = card.saved_by.filter(pk=request.user.pk).exists()
 
-    return render(request, 'event-details.html', {
-        'active_tab': 'event-details',
-        'event': event,  # pass the event to the template
-    })
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.card = card
+            comment.save()
+            return redirect('event-details', pk=card.pk)
+    else:
+        form = CommentForm()
+
+    comments = card.comments.all().order_by('created_at')
+
+    context = {
+        'card': card,
+        'comments': comments,
+        'form': form,
+        'is_saved': is_saved,
+        'active_tab': 'event-details'
+    }
+
+    return render(request, 'event-details.html', context)
 
 
-def edit_comment(request):
-    return render(request, 'edit-comment.html', {'active_tab': 'edit-comment'})
+@login_required
+def edit_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+
+    if request.user != comment.user:
+        return redirect('event-details', pk=comment.card.pk)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('event-details', pk=comment.card.pk)
+    else:
+        form = CommentForm(instance=comment)
+    return render(request, 'edit-comment.html',
+                  {'form': form, 'comment': comment,
+                   'active_tab': 'edit-comment'})
 
 
-def delete_comments(request):
+def delete_comments(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    if request.user != comment.user:
+        return redirect('event-details', pk=comment.card.pk)
+
+    if request.method == 'POST':
+        card_pk = comment.card.pk
+        comment.delete()
+        return redirect('event-details', pk=card_pk)
     return render(request, 'delete-comments.html',
-                  {'active_tab': 'delete-comments'})
+                  {'comment': comment, 'active_tab': 'delete-comments'})
 
 
 def user_login(request):

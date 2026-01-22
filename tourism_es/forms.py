@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Contact
+from .models import Contact, Comment
 
 
 class RegisterForm(UserCreationForm):
@@ -64,3 +64,19 @@ class LoginForm(forms.Form):
             'placeholder': 'Enter your name'
         }), label="Password"
     )
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+        labels = {
+            'text': '',
+        }
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Write a comment...'
+            })
+        }
