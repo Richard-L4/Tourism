@@ -4,9 +4,11 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
-from .models import CardText, Comment
+from .models import CardText, Comment, CommentReaction
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.db import transaction
 
 
 def index(request):
@@ -148,3 +150,34 @@ def register(request):
         form = RegisterForm()
     return render(request, 'register.html',
                   {'active_tab': 'register', 'form': form})
+
+
+@login_required
+def toggle_reaction(request, comment_id, reaction_type):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=400)
+
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    with transaction.atomic():
+        existing = CommentReaction.objects.filter(user=request.user,
+                                                  comment=comment).first()
+
+        if existing:
+            if existing.reaction != reaction_type:
+                existing.reaction = reaction_type
+                existing.save()
+                status = 'changed'
+            else:
+                status = 'unchanged'
+        else:
+            CommentReaction.objects.create(user=request.user,
+                                           comment=comment,
+                                           reaction=reaction_type)
+            status = 'added'
+
+        likes_count = comment.reactions.filter(reaction='like').count()
+        dislikes_count = comment.reactions.filter(reaction='dislike').count()
+
+    return JsonResponse({'status': status, 'likes': likes_count,
+                         'dislikes': dislikes_count})
