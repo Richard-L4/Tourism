@@ -51,11 +51,11 @@ class Comment(models.Model):
 
 
 class CommentReaction(models.Model):
-    LIKE = 'Like'
-    DISLIKE = 'dislike'
+    LIKE = 'LIKE'
+    DISLIKE = 'DISLIKE'
     REACTION_CHOICES = [
-        ('LIKE', 'like'),
-        ('DISLIKE', 'dislike'),
+        ('LIKE', 'Like'),
+        ('DISLIKE', 'Dislike'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
