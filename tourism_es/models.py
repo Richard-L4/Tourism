@@ -66,3 +66,22 @@ class CommentReaction(models.Model):
 
     class Meta:
         unique_together = ('user', 'comment')
+
+
+class CardTextTranslation(models.Model):
+    LANGUAGE_CHOICES = [
+        ('en', 'English'),
+        ('es', 'Spanish'),
+    ]
+
+    card = models.ForeignKey(
+        CardText,
+        related_name='translations',
+        on_delete=models.CASCADE
+    )
+
+    language = models.CharField(max_length=5, choices=LANGUAGE_CHOICES)
+    content = models.TextField()
+
+    def __str__(self):
+        return f"{self.card.title} ({self.language})"

@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm, ContactForm, CommentForm
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
-from django.contrib.auth import logout
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .models import CardText, Comment, CommentReaction
 from django.core.paginator import Paginator
@@ -10,11 +9,63 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db import transaction
 
+# ==============================
+# Index / Home
+# ==============================
+
 
 def index(request):
-    return render(request, 'index.html', {'active_tab': 'index'})
+    lang = request.GET.get('lang', 'en')
+
+    valencia_intro = {
+        'en': [
+            "Valencia, on Spain’s east coast along the Mediterranean,"
+            " blends rich history, stunning architecture,"
+            " and a lively cultural scene.",
+            "Its historic center features narrow streets, beautiful plazas,"
+            " Valencia Cathedral, and the Silk Exchange."
+            " Visitors enjoy ancient markets, local cuisine,"
+            " and scenic strolls.",
+            "The futuristic City of Arts and Sciences captivates "
+            "all ages with an opera house, science museum, and aquarium."
+            " Gardens, beaches, and parks offer relaxation,"
+            " while festivals like Las Fallas showcase art, music, and fire.",
+            "With tradition, modernity, and welcoming streets,"
+            " Valencia provides a vibrant Mediterranean experience"
+            " that delights the senses and leaves a lasting impression."
+        ],
+        'es': [
+            "Valencia, en la costa este de España a lo largo del Mediterráneo",
+            "combina rica historia, arquitectura impresionante y"
+            " una vibrante escena cultural.",
+            "Su centro histórico presenta calles estrechas, hermosas plazas,"
+            " la Catedral de Valencia y la Lonja de la Seda."
+            " Los visitantes disfrutan de mercados antiguos,"
+            " gastronomía local "
+            "y paseos escénicos.",
+            "La futurista Ciudad de las Artes y las Ciencias cautiva a"
+            " todas las edades con un teatro de ópera, museo de ciencias y"
+            " acuario. Jardines, playas y parques ofrecen relajación,"
+            " mientras que festivales como Las Fallas muestran arte,"
+            " música y fuego.",
+            "Con tradición, modernidad y calles acogedoras,"
+            " Valencia ofrece una vibrante experiencia mediterránea"
+            " que deleita los sentidos y deja una impresión duradera."
+        ]
+    }
+
+    content_paragraphs = valencia_intro.get(lang, valencia_intro['en'])
+
+    return render(request, 'index.html', {
+        'active_tab': 'index',
+        'content_paragraphs': content_paragraphs,
+        'lang': lang
+    })
 
 
+# ==============================
+# About / Contact Form
+# ==============================
 def about(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -27,19 +78,42 @@ def about(request):
     return render(request, 'about.html', {'active_tab': 'about', 'form': form})
 
 
+# ==============================
+# Events Listing
+# ==============================
 def events(request):
-    # cards for card: cards in return render and for paginator later
+    lang = request.GET.get('lang', 'en')
     card_texts = CardText.objects.all().order_by('id')
+
+    for card in card_texts:
+        translation = card.translations.filter(language=lang).first()
+        card.translated_content = (
+            translation.content
+            if translation else card.content or 'Content coming soon.')
+
     paginator = Paginator(card_texts, 4)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
     return render(request, 'events.html', {
-        'active_tab': 'events', 'page_obj': page_obj})
+        'active_tab': 'events',
+        'page_obj': page_obj,
+        'lang': lang
+    })
 
 
+# ==============================
+# Event Details
+# ==============================
 def event_details(request, pk):
-    # safer way to get the event; avoids crashing if ID doesn't exist
     card = get_object_or_404(CardText, id=pk)
+    lang = request.GET.get('lang', 'en')
+    translation = card.translations.filter(language=lang).first()
+    content = (
+        translation.content
+        if translation
+        else card.content or 'Content coming soon.')
+
     is_saved = False
     if request.user.is_authenticated:
         is_saved = card.saved_by.filter(pk=request.user.pk).exists()
@@ -57,36 +131,38 @@ def event_details(request, pk):
 
     comments = card.comments.all().order_by('created_at')
 
-    context = {
+    return render(request, 'event-details.html', {
         'card': card,
+        'content': content,
         'comments': comments,
         'form': form,
         'is_saved': is_saved,
-        'active_tab': 'event-details'
-    }
+        'active_tab': 'event-details',
+        'lang': lang
+    })
 
-    return render(request, 'event-details.html', context)
 
-
+# ==============================
+# Comment Management
+# ==============================
 @login_required
 def edit_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
-
     if request.user != comment.user:
         return redirect('event-details', pk=comment.card.pk)
 
-    if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            return redirect('event-details', pk=comment.card.pk)
-    else:
-        form = CommentForm(instance=comment)
-    return render(request, 'edit-comment.html',
+    form = CommentForm(request.POST or None, instance=comment)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('event-details', pk=comment.card.pk)
+
+    return render(request,
+                  'edit-comment.html',
                   {'form': form, 'comment': comment,
                    'active_tab': 'edit-comment'})
 
 
+@login_required
 def delete_comments(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     if request.user != comment.user:
@@ -96,29 +172,29 @@ def delete_comments(request, pk):
         card_pk = comment.card.pk
         comment.delete()
         return redirect('event-details', pk=card_pk)
-    return render(request, 'delete-comments.html',
+
+    return render(request,
+                  'delete-comments.html',
                   {'comment': comment, 'active_tab': 'delete-comments'})
 
 
+# ==============================
+# User Authentication
+# ==============================
 def user_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, f"You are logged in as {username}")
-                return redirect('index')
-            else:
-                messages.error(request, "Invalid username or password")
+    form = AuthenticationForm(request, data=request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = authenticate(
+            username=form.cleaned_data['username'],
+            password=form.cleaned_data['password'])
+        if user:
+            login(request, user)
+            messages.success(request, f"You are logged in as {user.username}")
+            return redirect('index')
         else:
             messages.error(request, "Invalid username or password")
-    else:
-        form = AuthenticationForm()
-    return render(request, 'login.html',
-                  {'active_tab': 'login', 'form': form})
+
+    return render(request, 'login.html', {'active_tab': 'login', 'form': form})
 
 
 def user_logout(request):
@@ -132,33 +208,31 @@ def confirm_logout(request):
     if request.method == 'POST':
         logout(request)
         return redirect('index')
-    return render(request, 'confirm-logout.html',
-                  {'active_tab': 'confirm-logout'})
+    return render(request,
+                  'confirm-logout.html', {'active_tab': 'confirm-logout'})
 
 
 def register(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(
-                request, f"Account created for {username}! You can log in."
-            )
-            return redirect('login')
-    else:
-        form = RegisterForm()
-    return render(request, 'register.html',
-                  {'active_tab': 'register', 'form': form})
+    form = RegisterForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.save()
+        messages.success(
+            request, f"Account created for {user.username}! You can log in.")
+        return redirect('login')
+
+    return render(request, 'register.html', {'active_tab': 'register',
+                                             'form': form})
 
 
+# ==============================
+# Comment Reactions (Like/Dislike)
+# ==============================
 @login_required
 def toggle_reaction(request, comment_id, reaction_type):
     if request.method != 'POST':
         return JsonResponse({'error': 'POST required'}, status=400)
 
     comment = get_object_or_404(Comment, id=comment_id)
-
     with transaction.atomic():
         existing = CommentReaction.objects.filter(user=request.user,
                                                   comment=comment).first()
@@ -171,8 +245,7 @@ def toggle_reaction(request, comment_id, reaction_type):
             else:
                 status = 'unchanged'
         else:
-            CommentReaction.objects.create(user=request.user,
-                                           comment=comment,
+            CommentReaction.objects.create(user=request.user, comment=comment,
                                            reaction=reaction_type)
             status = 'added'
 
@@ -180,4 +253,4 @@ def toggle_reaction(request, comment_id, reaction_type):
         dislikes_count = comment.reactions.filter(reaction='dislike').count()
 
     return JsonResponse({'status': status, 'likes': likes_count,
-                         'dislikes': dislikes_count})
+                        'dislikes': dislikes_count})

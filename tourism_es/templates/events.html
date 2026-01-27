@@ -16,13 +16,20 @@
 <div class="cards-container">
     {% for card in page_obj %}
     <!-- data - url line for whole card to be clickable -->
-    <div class="card" data-url="{% url 'event-details' pk=card.id %}"
-     onclick="window.location=this.dataset.url">
-     <img src="{% static 'images/' %}{{ card.image_name }}" alt="{{ card.title }}">
-     <p>{{ card.content|truncatechars:100}}</p>
-     <a href="{% url 'event-details' pk=card.id %}" class="read-more">
-        Read more
-     </a>
+    <div class="card" data-url="{% url 'event-details' pk=card.id %}" onclick="window.location=this.dataset.url">
+        <img src="{% static 'images/' %}{{ card.image_name }}" alt="{{ card.title }}">
+        <p>{{ card.translated_content|truncatechars:100}}</p>
+        <div class="lang-switch">
+            <a
+                href="?{% for key, value in request.GET.items %}{% if key != 'lang' %}{{ key }}={{ value }}&{% endif %}{% endfor %}lang=en">English</a>
+            |
+            <a
+                href="?{% for key, value in request.GET.items %}{% if key != 'lang' %}{{ key }}={{ value }}&{% endif %}{% endfor %}lang=es">Español</a>
+        </div>
+
+        <a href="{% url 'event-details' pk=card.id %}" class="read-more">
+            Read more
+        </a>
     </div>
     {% empty %}
     <p>No cards yet</p>
@@ -30,24 +37,32 @@
 </div>
 
 <!-- Paginator Controls -->
- <div class="pagination">
+<div class="pagination">
     <div class="page-number">
         <span class="page-info">
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
         </span>
     </div>
-
     {% if page_obj.has_previous %}
     <div class="prev-wrapper">
-        <a href="?page={{ page_obj.previous_page_number }}" class="prev-btn">Previous</a>
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}"
+            class="prev-btn">
+            Previous
+        </a>
     </div>
     {% endif %}
 
     {% if page_obj.has_next %}
     <div class="next-wrapper">
-        <a href="?page={{ page_obj.next_page_number }}" class="next-btn">Next</a>
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}"
+            class="next-btn">
+            Next
+        </a>
     </div>
     {% endif %}
- </div>
+
+
+
+</div>
 
 {% endblock %}

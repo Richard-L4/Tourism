@@ -19,20 +19,17 @@
 
 
 <div class="valencia-intro">
-       <div class="valencia-text">
-    <p>
-        Valencia, on Spain’s east coast along the Mediterranean, blends rich history, stunning architecture, and a lively cultural scene.
-    </p>
-    <p>
-        Its historic center features narrow streets, beautiful plazas, Valencia Cathedral, and the Silk Exchange. Visitors enjoy ancient markets, local cuisine, and scenic strolls.
-    </p>
-    <p>
-        The futuristic City of Arts and Sciences captivates all ages with an opera house, science museum, and aquarium. Gardens, beaches, and parks offer relaxation, while festivals like Las Fallas showcase art, music, and fire.
-    </p>
-    <p>
-        With tradition, modernity, and welcoming streets, Valencia provides a vibrant Mediterranean experience that delights the senses and leaves a lasting impression.
-    </p>
+    <div class="valencia-text">
+        {% for paragraph in content_paragraphs %}
+            <p>{{ paragraph }}</p>
+        {% endfor %}
     </div>
 </div>
+
+<div class="lang-switch">
+    <a href="?lang=en">English</a> |
+    <a href="?lang=es">Español</a>
+</div>
+
 
 {% endblock %}

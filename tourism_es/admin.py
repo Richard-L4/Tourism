@@ -1,13 +1,26 @@
 from django.contrib import admin
-from .models import Contact, CardText, Comment, CommentReaction
+from .models import (
+    Contact,
+    CardText,
+    Comment,
+    CommentReaction,
+    CardTextTranslation,
+)
 
 # Register your models here.
 admin.site.register(Contact)
 
 
+# Inline translations
+class CardTextTranslationInline(admin.TabularInline):
+    model = CardTextTranslation
+    extra = 1
+
+
 @admin.register(CardText)
 class CardTextAdmin(admin.ModelAdmin):
     list_display = ('title', 'content')
+    inlines = [CardTextTranslationInline]
 
 
 @admin.register(Comment)
@@ -17,7 +30,7 @@ class CommentAdmin(admin.ModelAdmin):
     def comment_preview(self, obj):
         return obj.text[:50]
 
-    comment_preview.short_desctiption = 'Comment'
+    comment_preview.short_description = 'Comment'
 
 
 # ------------------------
@@ -36,4 +49,4 @@ class CommentReactionInLine(admin.ModelAdmin):
 
 @admin.register(CommentReaction)
 class CommentReactionAdmin(admin.ModelAdmin):
-    list_dislplay = ('id', 'user', 'comment', 'reaction')
+    list_display = ('id', 'user', 'comment', 'reaction')
