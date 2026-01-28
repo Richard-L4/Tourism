@@ -51,11 +51,11 @@ class Comment(models.Model):
 
 
 class CommentReaction(models.Model):
-    LIKE = 'LIKE'
-    DISLIKE = 'DISLIKE'
+    LIKE = 'like'
+    DISLIKE = 'dislike'
     REACTION_CHOICES = [
-        ('LIKE', 'Like'),
-        ('DISLIKE', 'Dislike'),
+        (LIKE, 'like'),
+        (DISLIKE, 'dislike'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -65,7 +65,7 @@ class CommentReaction(models.Model):
     reaction = models.CharField(max_length=7, choices=REACTION_CHOICES)
 
     class Meta:
-        unique_together = ('user', 'comment')
+        unique_together = ('user', 'comment')  # user can react only once
 
 
 class CardTextTranslation(models.Model):
