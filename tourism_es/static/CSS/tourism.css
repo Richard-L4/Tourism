@@ -421,6 +421,16 @@ nav a.active {
   border: 2px solid #120d71;    /* subtle border */
 }
 
+.card img {
+  width: 100%;           /* full width of card */
+  height: 200px;         /* fixed height for uniformity */
+  object-fit: cover;     /* crops without stretching */
+  border-radius: 10px;   /* same as your style */
+  background-color: yellow;
+  padding: 5px;
+}
+
+
 .card-content-box {
   background-color: #ffffff; /* white box for content */
   border: 2px solid #120d71;    /* subtle border */
