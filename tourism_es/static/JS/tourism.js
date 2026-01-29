@@ -11,9 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   };
 
+  // --- Like/Dislike buttons ---
   document.querySelectorAll(".like-btn, .dislike-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      if (btn.disabled) return; // ignore if already in progress
+      if (btn.disabled) return;
       btn.disabled = true;
 
       const comment = btn.closest(".comment");
@@ -21,14 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const dislikeBtn = comment.querySelector(".dislike-btn");
       const url = btn.dataset.url;
 
-      // Determine current state
       const isLikeClicked = btn.classList.contains("like-btn");
       const activeLike = likeBtn.classList.contains("active");
       const activeDislike = dislikeBtn.classList.contains("active");
 
-      // Only allow switching if necessary
       if ((isLikeClicked && activeLike) || (!isLikeClicked && activeDislike)) {
-        btn.disabled = false; // do nothing if user clicks the same active button
+        btn.disabled = false;
         return;
       }
 
@@ -39,11 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          // Update counts
           comment.querySelector(".like-count").textContent = data.likes;
           comment.querySelector(".dislike-count").textContent = data.dislikes;
 
-          // Update active states
           likeBtn.classList.toggle("active", isLikeClicked);
           dislikeBtn.classList.toggle("active", !isLikeClicked);
         })
@@ -51,6 +48,55 @@ document.addEventListener("DOMContentLoaded", () => {
         .finally(() => {
           btn.disabled = false;
         });
+    });
+  });
+
+  // --- Star rating ---
+  document.querySelectorAll(".star-form").forEach((form) => {
+    const stars = form.querySelectorAll(".star-btn");
+    const msg = form.querySelector(".rating-msg");
+    const url = form.dataset.url;
+
+    stars.forEach((starBtn) => {
+      starBtn.addEventListener("click", () => {
+        const rating = parseInt(starBtn.value);
+
+        // Send rating to server
+        const formData = new FormData();
+        formData.append("rating", rating);
+
+        fetch(url, {
+          method: "POST",
+          headers: { "X-CSRFToken": getCookie("csrftoken") },
+          body: formData,
+          credentials: "same-origin",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) return alert(data.error);
+
+            // Highlight stars up to selected rating
+            stars.forEach((s) => {
+              if (parseInt(s.value) <= data.rating) {
+                s.classList.add("selected");
+              } else {
+                s.classList.remove("selected");
+              }
+            });
+
+            // Update message
+            if (msg) {
+              msg.textContent = `Your rating: ${data.rating} ★ (click to change)`;
+            }
+
+            // Update average rating display
+            const avgElem = document.querySelector(".rating-box p");
+            if (avgElem && data.average_rating !== undefined && data.rating_count !== undefined) {
+              avgElem.innerHTML = `⭐ Average: ${data.average_rating.toFixed(1)} (${data.rating_count} rating${data.rating_count !== 1 ? "s" : ""})`;
+            }
+          })
+          .catch(console.error);
+      });
     });
   });
 });

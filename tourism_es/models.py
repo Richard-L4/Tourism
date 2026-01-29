@@ -85,3 +85,16 @@ class CardTextTranslation(models.Model):
 
     def __str__(self):
         return f"{self.card.title} ({self.language})"
+
+
+class EventRating(models.Model):
+    card = models.ForeignKey('CardText',
+                             on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+
+    class Meta:
+        unique_together = ('card', 'user')  # one rating per user per event
+
+    def __str__(self):
+        return f"{self.card.title} - {self.user.username} ({self.rating})"

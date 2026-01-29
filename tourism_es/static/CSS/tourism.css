@@ -429,6 +429,7 @@ nav a.active {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   width: 100%;               /* fills max-width of card-detail */
   box-sizing: border-box;
+  min-width: 0;
 }
 
 .card-detail a {
@@ -607,6 +608,38 @@ hr {
   max-width: 300px;                /* optional, keeps it centered nicely */
 }
 
+
+/*  Ratings box style */
+.rating-box {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+    min-width: 0;;
+}
+
+.star-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: 0.2s ease;
+}
+
+.star-btn:hover,
+.star-btn.selected {
+    opacity: 1;
+    transform: scale(1.2);
+}
 
 
 /* ===========================

@@ -3,11 +3,12 @@ from .forms import RegisterForm, ContactForm, CommentForm
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .models import CardText, Comment, CommentReaction
+from .models import CardText, Comment, CommentReaction, EventRating
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db import transaction
+from django.db.models import Avg
 
 # ==============================
 # Index / Home
@@ -107,18 +108,37 @@ def events(request):
 # ==============================
 def event_details(request, pk):
     card = get_object_or_404(CardText, id=pk)
+
+    # 🌍 Language system (unchanged)
     lang = request.GET.get('lang', 'en')
     translation = card.translations.filter(language=lang).first()
     content = (
         translation.content
         if translation
-        else card.content or 'Content coming soon.')
+        else card.content or 'Content coming soon.'
+    )
 
+    # ❤️ Saved events check (unchanged)
     is_saved = False
     if request.user.is_authenticated:
         is_saved = card.saved_by.filter(pk=request.user.pk).exists()
 
+    # ⭐ HANDLE POST REQUESTS (NOW HANDLES TWO THINGS)
     if request.method == 'POST' and request.user.is_authenticated:
+
+        # ⭐ --- RATING SUBMISSION ---
+        if 'rating' in request.POST:
+            rating_value = request.POST.get('rating')
+
+            EventRating.objects.update_or_create(
+                card=card,
+                user=request.user,
+                defaults={'rating': int(rating_value)}
+            )
+
+            return redirect('event-details', pk=card.pk)
+
+        # 💬 --- COMMENT SUBMISSION ---
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -126,10 +146,22 @@ def event_details(request, pk):
             comment.card = card
             comment.save()
             return redirect('event-details', pk=card.pk)
+
     else:
         form = CommentForm()
 
+    # 💬 Comments list (unchanged)
     comments = card.comments.all().order_by('created_at')
+
+    # ⭐ RATING STATS (NEW)
+    average_rating = card.ratings.aggregate(avg=Avg('rating'))['avg']
+    rating_count = card.ratings.count()
+
+    # ⭐ User’s existing rating (NEW)
+    user_rating = None
+    if request.user.is_authenticated:
+        user_rating = EventRating.objects.filter(
+            card=card, user=request.user).first()
 
     return render(request, 'event-details.html', {
         'card': card,
@@ -138,13 +170,46 @@ def event_details(request, pk):
         'form': form,
         'is_saved': is_saved,
         'active_tab': 'event-details',
-        'lang': lang
+        'lang': lang,
+
+        # ⭐ NEW CONTEXT FOR TEMPLATE
+        'average_rating': average_rating,
+        'rating_count': rating_count,
+        'user_rating': user_rating,
     })
 
+
+@login_required
+def rate_card(request, pk):
+    if request.method == 'POST':
+        card = get_object_or_404(CardText, pk=pk)
+        rating_value = int(request.POST.get('rating', 0))
+        if rating_value < 1 or rating_value > 5:
+            return JsonResponse({'error': 'Invalid rating'}, status=400)
+
+        # Create/update user rating
+        EventRating.objects.update_or_create(
+            card=card,
+            user=request.user,
+            defaults={'rating': rating_value}
+        )
+
+        # Recalculate average and count
+        avg = card.ratings.aggregate(Avg('rating'))['rating__avg'] or 0
+        count = card.ratings.count()
+
+        return JsonResponse({
+            'rating': rating_value,
+            'average_rating': round(avg, 1),
+            'rating_count': count
+        })
+    return JsonResponse({'error': 'POST required'}, status=400)
 
 # ==============================
 # Comment Management
 # ==============================
+
+
 @login_required
 def edit_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
